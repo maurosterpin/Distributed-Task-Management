@@ -1,8 +1,20 @@
-version: "3"
+version: "3.9"
+
 services:
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+    depends_on:
+      - localstack
+
   localstack:
     image: localstack/localstack
+    container_name: my_localstack
     ports:
       - "4566:4566"
     environment:
       - SERVICES=dynamodb
+      - AWS_ACCESS_KEY_ID=access_key_id
+      - AWS_DEFAULT_REGION=us-east-1
+      - AWS_SECRET_ACCESS_KEY=secret
