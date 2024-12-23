@@ -15,7 +15,7 @@ async def read_task(task_id: str):
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/tasks")
-async def add_task(task: Task):
+async def upsert_task(task: Task):
     try:
         result = create_task(task)
         return result
