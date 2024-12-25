@@ -3,8 +3,8 @@ version: "3.9"
 services:
   web:
     build: .
-    ports:
-      - "8000:8000"
+    expose:
+      - "8000"
     depends_on:
       - localstack
 
@@ -18,3 +18,12 @@ services:
       - AWS_ACCESS_KEY_ID=access_key_id
       - AWS_DEFAULT_REGION=us-east-1
       - AWS_SECRET_ACCESS_KEY=secret
+
+  load_balancer:
+    image: nginx:latest
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - web
