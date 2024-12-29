@@ -1,6 +1,7 @@
 from fastapi import FastAPI, HTTPException
 from .task_service import Task, get_task, create_task
 from .user_service import User, get_user, create_user
+from .notify_service import notify_user
 
 app = FastAPI()
 
@@ -22,9 +23,10 @@ async def read_task(task_id: str):
 @app.post("/tasks")
 async def upsert_task(task: Task):
     try:
-        get_user(task.owner)
-        get_user(task.assignee)
+        assignee = get_user(task.assignee)
+        prev_task = get_task(task.id)
         result = create_task(task)
+        notify_user(assignee["email"], prev_task, result)
         return result
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
