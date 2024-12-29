@@ -22,11 +22,11 @@ message = MIMEMultipart("alternative")
 
 message["From"] = sender_email
 
-html = """\
+def html(text): 
+    return f"""
         <html>
         <body>
-            <p>Hi,<br>
-            This is the test email</p>
+            <p>{text}</p>
         </body>
         </html>
         """
@@ -50,6 +50,11 @@ def send_email(receiver_email, subject, body):
   
     return {"msg":"send mail"}
 
-def notify_user(receiver, prev_task: Task, updated_task: Task):
-    send_email(receiver, "Test subject", html)
-    return {}
+def notify_user(owner, assignee, prev_task, updated_task: Task):
+    if (prev_task is None):
+        send_email(assignee, "New task for you", html(f"You have been assigned to task: {updated_task.title}"))
+    else:
+        if (prev_task["assignee"] != updated_task.assignee):
+            send_email(assignee, "New task for you", html(f"You have been assigned to task: {updated_task.title}"))
+        if (prev_task["status"] != updated_task.status):
+            send_email(owner, "Task status update", html(f"Task {updated_task.title} status is {updated_task.status}"))

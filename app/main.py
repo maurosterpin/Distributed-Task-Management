@@ -23,10 +23,16 @@ async def read_task(task_id: str):
 @app.post("/tasks")
 async def upsert_task(task: Task):
     try:
+        owner = get_user(task.owner)
         assignee = get_user(task.assignee)
-        prev_task = get_task(task.id)
+        prev_task = None
+        try:
+            prev_task = get_task(task.id)
+            print("Updating task")
+        except:
+            print("Creating task")
         result = create_task(task)
-        notify_user(assignee["email"], prev_task, result)
+        notify_user(owner["email"], assignee["email"], prev_task, task)
         return result
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
