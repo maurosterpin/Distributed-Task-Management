@@ -8,12 +8,12 @@ app = FastAPI()
 @app.get("/tasks/{task_id}")
 async def read_task(task_id: str):
     try:
-        task: Task = get_task(task_id)
-        owner: User = get_user(task["owner"])
-        assignee: User = get_user(task["assignee"])
+        task = get_task(task_id)
+        owner = get_user(task.owner)
+        assignee = get_user(task.assignee)
         if task:
-            task["owner"] = owner["name"]
-            task["assignee"] = assignee["name"]
+            task.owner = owner.name
+            task.assignee = assignee.name
             return task
         else:
             raise HTTPException(status_code=404, detail="Task not found")
@@ -32,7 +32,7 @@ async def upsert_task(task: Task):
         except:
             print("Creating task")
         result = create_task(task)
-        notify_user(owner["email"], assignee["email"], prev_task, task)
+        notify_user(owner.email, assignee.email, prev_task, task)
         return result
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

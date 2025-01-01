@@ -8,16 +8,17 @@ class User(BaseModel):
     email: str
     password: str
 
-def get_user(user_id: str):
+def get_user(user_id: str) -> User:
     try:
         response = user_table.get_item(Key={'id': user_id})
-        return response.get('Item', None)
+        item = response.get('Item', None)
+        return User(**item)
     except Exception as e:
         raise Exception(f"Error retrieving user: {str(e)}")
 
-def create_user(user: User):
+def create_user(user: User) -> dict:
     try:
         user_table.put_item(Item=user.dict())
-        return {"message": "User created successfully"}
+        return {"message": "User upserted successfully"}
     except Exception as e:
         raise Exception(f"Error creating user: {str(e)}")
