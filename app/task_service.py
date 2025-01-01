@@ -14,6 +14,8 @@ def get_task(task_id: str) -> Task:
     try:
         response = task_table.get_item(Key={'id': task_id})
         item = response.get('Item', None)
+        if item is None:
+            raise Exception(f"Task with id '{task_id}' does not exist.")
         return Task(**item)
     except Exception as e:
         raise Exception(f"Error retrieving task: {str(e)}")

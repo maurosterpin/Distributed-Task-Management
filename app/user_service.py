@@ -12,6 +12,8 @@ def get_user(user_id: str) -> User:
     try:
         response = user_table.get_item(Key={'id': user_id})
         item = response.get('Item', None)
+        if item is None:
+            raise Exception(f"User with id '{user_id}' does not exist.")
         return User(**item)
     except Exception as e:
         raise Exception(f"Error retrieving user: {str(e)}")
