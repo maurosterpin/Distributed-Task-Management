@@ -50,7 +50,7 @@ def send_email(receiver_email, subject, body):
   
     return {"msg":"send mail"}
 
-def notify_user(owner_email: str, assignee_email: str, prev_task: Task, updated_task: Task):
+async def notify_user(owner_email: str, assignee_email: str, prev_task: Task, updated_task: Task):
     if (prev_task is None):
         send_email(assignee_email, "New task for you", html(f"You have been assigned to task: {updated_task.title}"))
     else:

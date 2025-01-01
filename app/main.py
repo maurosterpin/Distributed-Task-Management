@@ -2,6 +2,7 @@ from fastapi import FastAPI, HTTPException
 from .task_service import Task, get_task, create_task
 from .user_service import User, get_user, create_user
 from .notify_service import notify_user
+import asyncio
 
 app = FastAPI()
 
@@ -32,7 +33,7 @@ async def upsert_task(task: Task):
         except:
             print("Creating task")
         result = create_task(task)
-        notify_user(owner.email, assignee.email, prev_task, task)
+        asyncio.create_task(notify_user(owner.email, assignee.email, prev_task, task))
         return result
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
