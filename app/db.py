@@ -1,11 +1,15 @@
 import boto3
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 dynamodb = boto3.resource(
     'dynamodb',
-    endpoint_url="http://host.docker.internal:4566",
-    region_name='us-east-1',
-    aws_access_key_id="access_key_id",
-    aws_secret_access_key="secret"
+    endpoint_url=os.getenv("DB_ENDPOINT_URL"),
+    region_name=os.getenv("DB_REGION_NAME"),
+    aws_access_key_id=os.getenv("DB_ACCESS_KEY"),
+    aws_secret_access_key=os.getenv("DB_SECRET_ACCESS_KEY")
 )
 
 def create_table(table_name):
