@@ -12,8 +12,21 @@ dynamodb = boto3.resource(
     aws_secret_access_key=os.getenv("DB_SECRET_ACCESS_KEY")
 )
 
+def table_exists(table_name):
+    try:
+        table = dynamodb.Table(table_name)
+        table.load()
+        return True
+    except Exception as e:
+        if e.response['Error']['Code'] == 'ResourceNotFoundException':
+            return False
+        else:
+            raise
+
 def create_table(table_name):
     try:
+        if (table_exists(table_name) is True): 
+            return
         print(f"Creating table '{table_name}'...")
         dynamodb.create_table(
             TableName=table_name,
