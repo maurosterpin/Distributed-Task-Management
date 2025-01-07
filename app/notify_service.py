@@ -18,9 +18,6 @@ login = os.getenv("LOGIN")
 password = os.getenv("PASSWORD")
   
 sender_email = "mailmug@example.com"
-message = MIMEMultipart("alternative")
-
-message["From"] = sender_email
 
 def html(text): 
     return f"""
@@ -33,6 +30,9 @@ def html(text):
   
 def send_email(receiver_email, subject, body):
 
+    message = MIMEMultipart("alternative")
+
+    message["From"] = sender_email
     message["Subject"] = subject
     message["To"] = receiver_email
   
